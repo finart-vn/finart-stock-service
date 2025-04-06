@@ -1,12 +1,30 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
+import { StockService } from './stock/stock.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+    private readonly stockService: StockService,
+  ) {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getHello(): Promise<{
+    history: any[];
+    allSymbols: any;
+  }> {
+    const symbols = ['HPG'];
+    const startDate = '2025-04-01';
+    
+    try {
+      const readableHistory = await this.stockService.getStockHistory(symbols, startDate);
+      return {
+        history: readableHistory,
+        allSymbols: [],
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 }
