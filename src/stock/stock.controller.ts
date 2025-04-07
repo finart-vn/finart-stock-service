@@ -1,4 +1,11 @@
-import { Controller, Get, Query, Param, ParseArrayPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Param,
+  ParseArrayPipe,
+  Delete,
+} from '@nestjs/common';
 import { StockService } from './stock.service';
 
 @Controller('stock')
@@ -7,7 +14,8 @@ export class StockController {
 
   @Get('history')
   async getStockHistory(
-    @Query('symbols', new ParseArrayPipe({ items: String, separator: ',' })) symbols: string[],
+    @Query('symbols', new ParseArrayPipe({ items: String, separator: ',' }))
+    symbols: string[],
     @Query('startDate') startDate: string,
     @Query('endDate') endDate?: string,
   ) {
@@ -21,8 +29,52 @@ export class StockController {
 
   @Get('prices')
   async getPriceBoard(
-    @Query('symbols', new ParseArrayPipe({ items: String, separator: ',' })) symbols: string[],
+    @Query('symbols', new ParseArrayPipe({ items: String, separator: ',' }))
+    symbols: string[],
   ) {
     return this.stockService.getPriceBoard(symbols);
   }
-} 
+
+  /**
+   * Get symbols grouped by industries
+   * @returns An array of industry objects, each containing an array of symbols
+   */
+  @Get('industries')
+  async getSymbolsByIndustries() {
+    return this.stockService.getSymbolsByIndustries();
+  }
+
+  /**
+   * Get partial industry data with optional filtering
+   * @param industryName Optional industry name to filter by
+   * @param fields Optional comma-separated list of fields to include
+   * @returns Filtered industry data
+   */
+  @Get('industries/partial')
+  async getPartialIndustryData(
+    @Query('industryName') industryName?: string,
+    @Query('fields') fieldsString?: string,
+  ) {
+    const fields = fieldsString ? fieldsString.split(',') : undefined;
+    return this.stockService.getPartialIndustryData(industryName, fields);
+  }
+
+  /**
+   * Get all industry codes
+   * @returns List of all industry codes
+   */
+  @Get('industries/codes')
+  async getIndustryCodes() {
+    return this.stockService.getIndustryCodes();
+  }
+
+  @Delete('cache/:type')
+  async clearCache(
+    @Param('type')
+    type: 'history' | 'symbols' | 'prices' | 'industries' | 'all',
+    @Query('symbols') symbolsString?: string,
+  ) {
+    const symbols = symbolsString ? symbolsString.split(',') : undefined;
+    return this.stockService.clearCache(type, symbols);
+  }
+}

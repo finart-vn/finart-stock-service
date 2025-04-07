@@ -5,12 +5,13 @@ import { UsersModule } from './users/users.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { StockModule } from './stock/stock.module';
 import { CacheModule } from '@nestjs/cache-manager';
+import { ConfigModule } from '@nestjs/config';
+import { redisConfig } from './config/redis.config';
 
 @Module({
   imports: [
-    CacheModule.register({
-      isGlobal: true,
-    }),
+    ConfigModule.forRoot(),
+    CacheModule.register(redisConfig),
     PrismaModule,
     UsersModule,
     StockModule,

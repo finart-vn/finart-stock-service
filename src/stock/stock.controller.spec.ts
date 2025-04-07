@@ -17,10 +17,13 @@ const mockHistoryData = [
   ]
 ];
 
-const mockSymbols = [
-  { symbol: 'VNM', companyName: 'Vietnam Dairy Products JSC' },
-  { symbol: 'VHM', companyName: 'Vinhomes JSC' }
-];
+const mockSymbols = {
+  record_count: 2,
+  ticker_info: [
+    { ticker: 'VNM', organName: 'Vietnam Dairy Products JSC', industry: 'Food & Beverage' },
+    { ticker: 'VHM', organName: 'Vinhomes JSC', industry: 'Real Estate' }
+  ]
+};
 
 const mockPriceBoard = [
   {
@@ -31,12 +34,25 @@ const mockPriceBoard = [
   }
 ];
 
+const mockIndustriesData = [
+  {
+    industry: 'Food & Beverage',
+    symbols: [{ ticker: 'VNM', organName: 'Vietnam Dairy Products JSC', industry: 'Food & Beverage' }]
+  },
+  {
+    industry: 'Real Estate',
+    symbols: [{ ticker: 'VHM', organName: 'Vinhomes JSC', industry: 'Real Estate' }]
+  }
+];
+
 // Create a mock StockService
 const createMockStockService = () => {
   return {
     getStockHistory: jest.fn().mockResolvedValue(mockHistoryData),
     getAllSymbols: jest.fn().mockResolvedValue(mockSymbols),
     getPriceBoard: jest.fn().mockResolvedValue(mockPriceBoard),
+    getSymbolsByIndustries: jest.fn().mockResolvedValue(mockIndustriesData),
+    clearCache: jest.fn().mockResolvedValue({ success: true, message: 'Cache cleared' }),
   };
 };
 
@@ -141,6 +157,44 @@ describe('StockController', () => {
       await expect(controller.getPriceBoard(symbols))
         .rejects
         .toThrow('Service error');
+    });
+  });
+
+  describe('getSymbolsByIndustries', () => {
+    it('should return symbols grouped by industries', async () => {
+      const result = await controller.getSymbolsByIndustries();
+
+      expect(result).toEqual(mockIndustriesData);
+      expect(service.getSymbolsByIndustries).toHaveBeenCalled();
+    });
+
+    it('should handle service errors', async () => {
+      const mockError = new Error('Service error');
+
+      jest.spyOn(service, 'getSymbolsByIndustries').mockRejectedValueOnce(mockError);
+
+      await expect(controller.getSymbolsByIndustries())
+        .rejects
+        .toThrow('Service error');
+    });
+  });
+
+  describe('clearCache', () => {
+    it('should clear cache of the specified type', async () => {
+      const type = 'industries';
+      const symbols = 'VNM,VHM';
+
+      await controller.clearCache(type, symbols);
+
+      expect(service.clearCache).toHaveBeenCalledWith(type, ['VNM', 'VHM']);
+    });
+
+    it('should handle undefined symbols', async () => {
+      const type = 'all';
+
+      await controller.clearCache(type, undefined);
+
+      expect(service.clearCache).toHaveBeenCalledWith(type, undefined);
     });
   });
 }); 
