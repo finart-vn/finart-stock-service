@@ -38,8 +38,13 @@ COPY --from=development /usr/src/app/dist ./dist
 COPY --from=development /usr/src/app/node_modules/.prisma ./node_modules/.prisma
 COPY prisma ./prisma
 
+# Copy environment files and startup script
+COPY .env* ./
+COPY docker-start.sh ./
+RUN chmod +x docker-start.sh
+
 # Expose the application port
 EXPOSE 3001
 
-# Start the application
-CMD ["node", "dist/main"] 
+# Start the application with our script
+CMD ["./docker-start.sh"] 

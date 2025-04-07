@@ -1,12 +1,13 @@
 version: '3.8'
 
 services:
-  # Main application
+  # Main application in development mode
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: finart-app
+      target: development # Use the development stage
+    container_name: finart-app-dev
     restart: always
     ports:
       - '${PORT:-3001}:3001'
@@ -14,25 +15,30 @@ services:
       - redis
     environment:
       - PORT=${PORT:-3001}
-      - NODE_ENV=${NODE_ENV:-production}
+      - NODE_ENV=development
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DATABASE_URL=${DATABASE_URL}
-      - DISABLE_PRISMA=${DISABLE_PRISMA:-false}
+      - DISABLE_PRISMA=true
     networks:
       - finart-network
-    # No volume mounts in production to ensure clean builds
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./prisma:/usr/src/app/prisma
+      - ./.env:/usr/src/app/.env
+      - ./.env.dev:/usr/src/app/.env.dev
+    command: npm run start:dev
     
   # Redis cache
   redis:
     image: redis:7.0-alpine
-    container_name: finart-redis
+    container_name: finart-redis-dev
     restart: always
     ports:
       - '${REDIS_PORT:-6379}:6379'
     command: redis-server --save 60 1 --loglevel warning
     volumes:
-      - redis-data:/data
+      - redis-data-dev:/data
     networks:
       - finart-network
 
@@ -41,4 +47,4 @@ networks:
     driver: bridge
 
 volumes:
-  redis-data: 
+  redis-data-dev: 
