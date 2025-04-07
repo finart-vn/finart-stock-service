@@ -12,17 +12,18 @@ services:
       - '${PORT:-3001}:3001'
     depends_on:
       - redis
+    env_file:
+      - .env.docker
     environment:
       - PORT=${PORT:-3001}
       - NODE_ENV=${NODE_ENV:-production}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=postgresql://postgres:gCccZEDfJZZUOPLAiwWiwWJLCDUDTNxo@switchyard.proxy.rlwy.net:17899/railway
       - PRISMA_QUERY_ENGINE_TYPE=binary
       - PRISMA_CLIENT_ENGINE_TYPE=binary
     networks:
       - finart-network
-    # No volume mounts in production to ensure clean builds
     
   # Redis cache
   redis:
