@@ -10,15 +10,18 @@ echo "Using DATABASE_URL: ${DATABASE_URL:0:15}...redacted"
 echo "OpenSSL version:"
 openssl version || echo "OpenSSL not found"
 
-# Generate Prisma client
-echo "Generating Prisma client..."
+# Set Prisma environment variables
+export PRISMA_QUERY_ENGINE_TYPE=binary
+export PRISMA_CLIENT_ENGINE_TYPE=binary
 
-# Set Prisma query engine binary type if not set
-if [ -z "$PRISMA_QUERY_ENGINE_TYPE" ]; then
-  export PRISMA_QUERY_ENGINE_TYPE=binary
-  echo "Set PRISMA_QUERY_ENGINE_TYPE=binary"
+# Set OpenSSL lib directory if empty (helps Prisma find OpenSSL)
+if [ -z "$LD_LIBRARY_PATH" ]; then
+  export LD_LIBRARY_PATH=/usr/lib
+  echo "Set LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 fi
 
+# Generate Prisma client
+echo "Generating Prisma client..."
 npx prisma generate
 
 # Make sure dist exists

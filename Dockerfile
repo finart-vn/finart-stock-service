@@ -4,7 +4,7 @@ FROM node:18-alpine As development
 WORKDIR /usr/src/app
 
 # Install OpenSSL for Prisma
-RUN apk add --no-cache openssl1.1-compat
+RUN apk add --no-cache openssl
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
@@ -31,7 +31,7 @@ ENV NODE_ENV=${NODE_ENV}
 WORKDIR /usr/src/app
 
 # Install OpenSSL for Prisma
-RUN apk add --no-cache openssl1.1-compat
+RUN apk add --no-cache openssl
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
