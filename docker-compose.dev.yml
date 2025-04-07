@@ -19,7 +19,8 @@ services:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
       - DATABASE_URL=${DATABASE_URL}
-      - DISABLE_PRISMA=true
+      - PRISMA_QUERY_ENGINE_TYPE=binary
+      - PRISMA_CLIENT_ENGINE_TYPE=binary
     networks:
       - finart-network
     volumes:
