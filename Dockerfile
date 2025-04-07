@@ -16,8 +16,9 @@ COPY . .
 ENV PRISMA_QUERY_ENGINE_TYPE=binary
 ENV PRISMA_CLIENT_ENGINE_TYPE=binary
 
-# Generate Prisma client
-RUN npx prisma generate
+# Generate Prisma client and ensure it's properly initialized
+RUN npx prisma generate && \
+    npx prisma db push --accept-data-loss
 
 # Build the application and ensure main.js is created
 RUN npm run build && ls -la dist/
