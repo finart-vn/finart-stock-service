@@ -12,19 +12,20 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Explicitly set Prisma variables
+# Set environment variables for build time
+ARG DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 ENV PRISMA_QUERY_ENGINE_TYPE=binary
 ENV PRISMA_CLIENT_ENGINE_TYPE=binary
 
-# Generate Prisma client and ensure it's properly initialized
-RUN npx prisma generate && \
-    npx prisma db push --accept-data-loss
+# Generate Prisma client and push schema
+RUN npx prisma generate && npx prisma db push --accept-data-loss
 
-# Build the application and ensure main.js is created
-RUN npm run build && ls -la dist/
+# Build the application
+RUN npm run build
 
 # Expose the application port
 EXPOSE 3001
 
-# Start the application directly
-CMD ["node", "dist/src/main.js"] 
+# Start the application
+CMD ["npm", "run", "start:prod"] 

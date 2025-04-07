@@ -6,6 +6,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - DATABASE_URL=${DATABASE_URL}
     container_name: finart-app
     restart: always
     ports:
@@ -19,7 +21,7 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - REDIS_HOST=redis
       - REDIS_PORT=6379
-      - DATABASE_URL=postgresql://postgres:gCccZEDfJZZUOPLAiwWiwWJLCDUDTNxo@switchyard.proxy.rlwy.net:17899/railway
+      - DATABASE_URL=${DATABASE_URL}
       - PRISMA_QUERY_ENGINE_TYPE=binary
       - PRISMA_CLIENT_ENGINE_TYPE=binary
     networks:
