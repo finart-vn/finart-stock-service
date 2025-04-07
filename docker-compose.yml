@@ -15,7 +15,7 @@ services:
     depends_on:
       - redis
     env_file:
-      - .env.docker
+      - .env
     environment:
       - PORT=${PORT:-3001}
       - NODE_ENV=${NODE_ENV:-production}
