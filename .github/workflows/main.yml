@@ -35,4 +35,16 @@ jobs:
     - name: Run tests
       run: npm test
       env:
-        DATABASE_URL: ${{ secrets.DATABASE_URL }} 
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+    - name: Install Railway CLI
+      run: npm i -g @railway/cli
+
+    - name: Deploy to Railway
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      run: railway up
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        REDIS_HOST: ${{ secrets.REDIS_HOST }}
+        REDIS_PORT: ${{ secrets.REDIS_PORT }}
