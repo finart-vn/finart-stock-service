@@ -5,8 +5,11 @@ import {
   Param,
   ParseArrayPipe,
   Delete,
+  Post,
+  Body,
 } from '@nestjs/common';
 import { StockService } from './stock.service';
+import { ChartMarketParams } from './stock.types';
 
 @Controller('stock')
 export class StockController {
@@ -66,6 +69,15 @@ export class StockController {
   @Get('industries/codes')
   async getIndustryCodes() {
     return this.stockService.getIndustryCodes();
+  }
+
+  @Post('chart/market')
+  async getChartMarket(@Body() params: ChartMarketParams) {
+    return this.stockService.getChartMarket({
+      symbols: params.symbols,
+      fromDate: params.fromDate,
+      toDate: params.toDate,
+    });
   }
 
   @Delete('cache/:type')

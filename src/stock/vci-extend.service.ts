@@ -1,19 +1,26 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import * as _ from 'lodash';
+import { ChartMarketParams } from './stock.types';
 
+const api = axios.create({
+  baseURL: 'https://trading.vietcap.com.vn/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+const graphqlApi = axios.create({
+  baseURL: 'https://trading.vietcap.com.vn/data-mt/graphql',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 @Injectable()
 export class VciExtendService {
   private readonly logger = new Logger(VciExtendService.name);
 
   // Constants from VCI const.js
-  private readonly BASE_URL = 'https://trading.vietcap.com.vn';
-  private readonly GRAPHQL_URL = this.BASE_URL + '/data-mt/graphql';
-
-  // Industry to company type code mapping from VCI const.js
-  private readonly ICB4_COMTYPE_CODE_MAP = {
-    // ... existing map ...
-  };
 
   /**
    * Fetches partial industry data by specific industry name or code
@@ -53,16 +60,9 @@ export class VciExtendService {
 
       try {
         // Make the GraphQL request
-        const response = await axios.post(
-          this.GRAPHQL_URL,
-          {
-            query: query,
-          },
-          {
-            timeout: 5000,
-            headers: { 'Content-Type': 'application/json' },
-          },
-        );
+        const response = await graphqlApi.post('/', {
+          query: query,
+        });
 
         const companiesInfo = _.get(
           response,
@@ -118,18 +118,11 @@ export class VciExtendService {
         }
       }`;
 
-      const response = await axios.post(
-        this.GRAPHQL_URL,
-        {
-          operationName: 'Query',
-          variables: {},
-          query: query,
-        },
-        {
-          timeout: 5000,
-          headers: { 'Content-Type': 'application/json' },
-        },
-      );
+      const response = await graphqlApi.post('/', {
+        operationName: 'Query',
+        variables: {},
+        query: query,
+      });
 
       const listIcbCode = _.get(response, 'data.data.ListIcbCode', []);
 
@@ -151,7 +144,7 @@ export class VciExtendService {
    */
   async symbolsByIndustries() {
     try {
-      this.logger.log(`Using VCI GraphQL endpoint: ${this.GRAPHQL_URL}`);
+      this.logger.log(`Using VCI GraphQL endpoint: ${graphqlApi}`);
 
       // Use the VCI GraphQL endpoint with all required fields
       const payload = {
@@ -169,10 +162,7 @@ export class VciExtendService {
         }`,
       };
 
-      const response = await axios.post(this.GRAPHQL_URL, payload, {
-        timeout: 10000,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      const response = await graphqlApi.post('/', payload);
 
       // Safely get companies info with lodash
       const companiesInfo = _.get(
@@ -220,4 +210,49 @@ export class VciExtendService {
       throw new Error(`Failed to fetch industry data: ${error.message}`);
     }
   }
+  /**
+   * Fetches chart market data for a given symbol and date range
+   * @param symbols - Array of stock symbols to fetch data for ['VNINDEX', 'VN30', 'HNXIndex', 'HNX30', 'HNXUpcomIndex']
+   * @param fromDate - Start date in Unix timestamp format
+   * @param toDate - End date in Unix timestamp format
+   * @returns Chart market data
+   */
+  async getChartMarket(params: ChartMarketParams) {
+    this.logger.log(`Using VCI API endpoint: ${api}`);
+
+    try {
+      const response = await api.post('/chart/OHLCChart/gap', {
+        timeFrame: 'ONE_MINUTE',
+        symbols: params.symbols,
+        from: params.fromDate,
+        to: params.toDate,
+      });
+
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      this.logger.error(`Failed to fetch chart market: ${error.message}`);
+      throw new Error(`Failed to fetch chart market: ${error.message}`);
+    }
+  }
 }
+// fetch("https://trading.vietcap.com.vn/api/chart/OHLCChart/gap", {
+//   "headers": {
+//     "accept": "application/json, text/plain, */*",
+//     "accept-language": "en,en-US;q=0.9",
+//     "content-type": "application/json",
+//     "device-id": "1960a2587c038899",
+//     "request-start-time": "1744896907406",
+//     "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
+//     "sec-ch-ua-mobile": "?0",
+//     "sec-ch-ua-platform": "\"macOS\"",
+//     "sec-fetch-dest": "empty",
+//     "sec-fetch-mode": "cors",
+//     "sec-fetch-site": "same-origin",
+//     "cookie": "_ga=GA1.1.995456950.1743926953; vietcap_device_id=1960a2587c038899; vietcap_has_tab_key=true; lang=vi; vietcap_last_activity_time=1744896809947; _ga_3ES3TMFY01=GS1.1.1744896791.4.1.1744896810.0.0.0",
+//     "Referer": "https://trading.vietcap.com.vn/?filter-group=WL&filter-value=DEFAULT&view-type=FLAT&type=stock",
+//     "Referrer-Policy": "strict-origin-when-cross-origin"
+//   },
+//   "body": "{\"timeFrame\":\"ONE_MINUTE\",\"symbols\":[\"VNINDEX\",\"VN30\",\"HNXIndex\",\"HNX30\",\"HNXUpcomIndex\"],\"from\":1744822800,\"to\":1744908900}",
+//   "method": "POST"
+// });

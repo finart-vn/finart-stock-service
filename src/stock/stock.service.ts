@@ -3,7 +3,7 @@ import { Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Vnstock } from 'vnstock-js';
-import { ReadableHistoryEntry, StockHistoryParams } from './stock.types';
+import { ChartMarketParams, ReadableHistoryEntry, StockHistoryParams } from './stock.types';
 import { CACHE_TTL } from '../config/redis.config';
 import VCI from 'vnstock-js/dist/vci';
 import { VciExtendService } from './vci-extend.service';
@@ -300,5 +300,9 @@ export class StockService {
       this.logger.error(`Failed to get industry codes: ${error.message}`);
       return { data: [] };
     }
+  }
+
+  async getChartMarket(params: ChartMarketParams) {
+    return this.vciExtendService.getChartMarket(params);
   }
 }

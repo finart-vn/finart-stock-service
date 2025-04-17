@@ -25,3 +25,9 @@ export interface StockHistoryParams {
   start: string;
   end?: string;
 } 
+
+export interface ChartMarketParams {
+  symbols: string[];
+  fromDate: string;
+  toDate: string;
+}
