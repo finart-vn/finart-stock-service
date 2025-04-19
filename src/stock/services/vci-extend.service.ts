@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 import * as _ from 'lodash';
-import { ChartMarketParams } from './stock.types';
+import { ChartMarketParams } from '../stock.types';
 
 const api = axios.create({
   baseURL: 'https://trading.vietcap.com.vn/api',
@@ -236,23 +236,3 @@ export class VciExtendService {
     }
   }
 }
-// fetch("https://trading.vietcap.com.vn/api/chart/OHLCChart/gap", {
-//   "headers": {
-//     "accept": "application/json, text/plain, */*",
-//     "accept-language": "en,en-US;q=0.9",
-//     "content-type": "application/json",
-//     "device-id": "1960a2587c038899",
-//     "request-start-time": "1744896907406",
-//     "sec-ch-ua": "\"Google Chrome\";v=\"135\", \"Not-A.Brand\";v=\"8\", \"Chromium\";v=\"135\"",
-//     "sec-ch-ua-mobile": "?0",
-//     "sec-ch-ua-platform": "\"macOS\"",
-//     "sec-fetch-dest": "empty",
-//     "sec-fetch-mode": "cors",
-//     "sec-fetch-site": "same-origin",
-//     "cookie": "_ga=GA1.1.995456950.1743926953; vietcap_device_id=1960a2587c038899; vietcap_has_tab_key=true; lang=vi; vietcap_last_activity_time=1744896809947; _ga_3ES3TMFY01=GS1.1.1744896791.4.1.1744896810.0.0.0",
-//     "Referer": "https://trading.vietcap.com.vn/?filter-group=WL&filter-value=DEFAULT&view-type=FLAT&type=stock",
-//     "Referrer-Policy": "strict-origin-when-cross-origin"
-//   },
-//   "body": "{\"timeFrame\":\"ONE_MINUTE\",\"symbols\":[\"VNINDEX\",\"VN30\",\"HNXIndex\",\"HNX30\",\"HNXUpcomIndex\"],\"from\":1744822800,\"to\":1744908900}",
-//   "method": "POST"
-// });

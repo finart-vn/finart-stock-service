@@ -8,8 +8,8 @@ import {
   Post,
   Body,
 } from '@nestjs/common';
-import { StockService } from './stock.service';
-import { ChartMarketParams } from './stock.types';
+import { StockService } from '../services/stock.service';
+import { ChartMarketParams } from '../stock.types';
 
 @Controller('stock')
 export class StockController {

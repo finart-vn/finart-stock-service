@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import { StockService } from './stock.service';
-import { StockController } from './stock.controller';
-import { VciExtendService } from './vci-extend.service';
+import { StockService } from './services/stock.service';
+import { StockController } from './controllers/stock.controller';
+import { VciExtendService } from './services/vci-extend.service';
 
 @Module({
   imports: [

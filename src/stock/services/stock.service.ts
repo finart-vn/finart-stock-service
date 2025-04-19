@@ -3,8 +3,8 @@ import { Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Vnstock } from 'vnstock-js';
-import { ChartMarketParams, ReadableHistoryEntry, StockHistoryParams } from './stock.types';
-import { CACHE_TTL } from '../config/redis.config';
+import { ChartMarketParams, ReadableHistoryEntry, StockHistoryParams } from '../stock.types';
+import { CACHE_TTL } from '../../config/redis.config';
 import VCI from 'vnstock-js/dist/vci';
 import { VciExtendService } from './vci-extend.service';
 
