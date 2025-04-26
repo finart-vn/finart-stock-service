@@ -30,12 +30,9 @@ export class StockController {
     return this.stockService.getAllSymbols();
   }
 
-  @Get('prices')
-  async getPriceBoard(
-    @Query('symbols', new ParseArrayPipe({ items: String, separator: ',' }))
-    symbols: string[],
-  ) {
-    return this.stockService.getPriceBoard(symbols);
+  @Post('prices')
+  async getPriceBoard(@Body() params: { symbols: string[] }) {
+    return this.stockService.getPriceBoard(params.symbols);
   }
 
   /**
