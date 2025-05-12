@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { StockController } from './stock.controller';
-import { StockService } from '../services/stock.service';
+import { StockController } from '../../../stock/controllers/stock.controller';
+import { StockService } from '../../../stock/services/stock.service';
 import { BadRequestException } from '@nestjs/common';
 
 // Mock data
@@ -12,17 +12,21 @@ const mockHistoryData = [
       high: 105,
       low: 98,
       close: 102,
-      volume: 1000000
-    }
-  ]
+      volume: 1000000,
+    },
+  ],
 ];
 
 const mockSymbols = {
   record_count: 2,
   ticker_info: [
-    { ticker: 'VNM', organName: 'Vietnam Dairy Products JSC', industry: 'Food & Beverage' },
-    { ticker: 'VHM', organName: 'Vinhomes JSC', industry: 'Real Estate' }
-  ]
+    {
+      ticker: 'VNM',
+      organName: 'Vietnam Dairy Products JSC',
+      industry: 'Food & Beverage',
+    },
+    { ticker: 'VHM', organName: 'Vinhomes JSC', industry: 'Real Estate' },
+  ],
 };
 
 const mockPriceBoard = [
@@ -30,19 +34,27 @@ const mockPriceBoard = [
     symbol: 'VNM',
     price: 80000,
     change: 1000,
-    pctChange: 1.25
-  }
+    pctChange: 1.25,
+  },
 ];
 
 const mockIndustriesData = [
   {
     industry: 'Food & Beverage',
-    symbols: [{ ticker: 'VNM', organName: 'Vietnam Dairy Products JSC', industry: 'Food & Beverage' }]
+    symbols: [
+      {
+        ticker: 'VNM',
+        organName: 'Vietnam Dairy Products JSC',
+        industry: 'Food & Beverage',
+      },
+    ],
   },
   {
     industry: 'Real Estate',
-    symbols: [{ ticker: 'VHM', organName: 'Vinhomes JSC', industry: 'Real Estate' }]
-  }
+    symbols: [
+      { ticker: 'VHM', organName: 'Vinhomes JSC', industry: 'Real Estate' },
+    ],
+  },
 ];
 
 // Create a mock StockService
@@ -52,7 +64,9 @@ const createMockStockService = () => {
     getAllSymbols: jest.fn().mockResolvedValue(mockSymbols),
     getPriceBoard: jest.fn().mockResolvedValue(mockPriceBoard),
     getSymbolsByIndustries: jest.fn().mockResolvedValue(mockIndustriesData),
-    clearCache: jest.fn().mockResolvedValue({ success: true, message: 'Cache cleared' }),
+    clearCache: jest
+      .fn()
+      .mockResolvedValue({ success: true, message: 'Cache cleared' }),
   };
 };
 
@@ -90,20 +104,36 @@ describe('StockController', () => {
       const startDate = '2023-01-01';
       const endDate = '2023-01-31';
 
-      const result = await controller.getStockHistory(symbols, startDate, endDate);
+      const result = await controller.getStockHistory(
+        symbols,
+        startDate,
+        endDate,
+      );
 
       expect(result).toEqual(mockHistoryData);
-      expect(service.getStockHistory).toHaveBeenCalledWith(symbols, startDate, endDate);
+      expect(service.getStockHistory).toHaveBeenCalledWith(
+        symbols,
+        startDate,
+        endDate,
+      );
     });
 
     it('should handle requests without endDate', async () => {
       const symbols = ['VNM'];
       const startDate = '2023-01-01';
 
-      const result = await controller.getStockHistory(symbols, startDate, undefined);
+      const result = await controller.getStockHistory(
+        symbols,
+        startDate,
+        undefined,
+      );
 
       expect(result).toEqual(mockHistoryData);
-      expect(service.getStockHistory).toHaveBeenCalledWith(symbols, startDate, undefined);
+      expect(service.getStockHistory).toHaveBeenCalledWith(
+        symbols,
+        startDate,
+        undefined,
+      );
     });
 
     it('should handle service errors', async () => {
@@ -113,9 +143,9 @@ describe('StockController', () => {
 
       jest.spyOn(service, 'getStockHistory').mockRejectedValueOnce(mockError);
 
-      await expect(controller.getStockHistory(symbols, startDate, undefined))
-        .rejects
-        .toThrow('Service error');
+      await expect(
+        controller.getStockHistory(symbols, startDate, undefined),
+      ).rejects.toThrow('Service error');
     });
   });
 
@@ -132,9 +162,7 @@ describe('StockController', () => {
 
       jest.spyOn(service, 'getAllSymbols').mockRejectedValueOnce(mockError);
 
-      await expect(controller.getAllSymbols())
-        .rejects
-        .toThrow('Service error');
+      await expect(controller.getAllSymbols()).rejects.toThrow('Service error');
     });
   });
 
@@ -154,9 +182,9 @@ describe('StockController', () => {
 
       jest.spyOn(service, 'getPriceBoard').mockRejectedValueOnce(mockError);
 
-      await expect(controller.getPriceBoard(symbols))
-        .rejects
-        .toThrow('Service error');
+      await expect(controller.getPriceBoard(symbols)).rejects.toThrow(
+        'Service error',
+      );
     });
   });
 
@@ -171,11 +199,13 @@ describe('StockController', () => {
     it('should handle service errors', async () => {
       const mockError = new Error('Service error');
 
-      jest.spyOn(service, 'getSymbolsByIndustries').mockRejectedValueOnce(mockError);
+      jest
+        .spyOn(service, 'getSymbolsByIndustries')
+        .mockRejectedValueOnce(mockError);
 
-      await expect(controller.getSymbolsByIndustries())
-        .rejects
-        .toThrow('Service error');
+      await expect(controller.getSymbolsByIndustries()).rejects.toThrow(
+        'Service error',
+      );
     });
   });
 
@@ -197,4 +227,4 @@ describe('StockController', () => {
       expect(service.clearCache).toHaveBeenCalledWith(type, undefined);
     });
   });
-}); 
+});

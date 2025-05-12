@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { StockService } from './stock.service';
+import { StockService } from '../../../stock/services/stock.service';
 import { Logger } from '@nestjs/common';
-import { CACHE_TTL } from '../../config/redis.config';
-import { VciExtendService } from './vci-extend.service';
+import { CACHE_TTL } from '../../../config/redis.config';
+import { VciExtendService } from '../../../stock/services/vci-extend.service';
 
 // Mock data
 const mockHistoryData = [

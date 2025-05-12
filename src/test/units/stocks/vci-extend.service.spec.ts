@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { VciExtendService } from './vci-extend.service';
+import { VciExtendService } from '../../../stock/services/vci-extend.service';
 import axios from 'axios';
 import { Logger } from '@nestjs/common';
 
