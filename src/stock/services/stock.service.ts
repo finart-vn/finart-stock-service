@@ -3,7 +3,11 @@ import { Inject } from '@nestjs/common';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
 import { Vnstock } from 'vnstock-js';
-import { ChartMarketParams, ReadableHistoryEntry, StockHistoryParams } from '../stock.types';
+import {
+  ChartMarketParams,
+  ReadableHistoryEntry,
+  StockHistoryParams,
+} from '../stock.types';
 import { CACHE_TTL } from '../../config/redis.config';
 import VCI from 'vnstock-js/dist/vci';
 import { VciExtendService } from './vci-extend.service';
@@ -280,7 +284,6 @@ export class StockService {
    */
   async getIndustryCodes() {
     const cacheKey = `${this.CACHE_KEY_PREFIX}industry_codes`;
-
     // Try to get from cache first
     const cachedData = await this.cacheManager.get(cacheKey);
     if (cachedData) {
@@ -304,5 +307,15 @@ export class StockService {
 
   async getChartMarket(params: ChartMarketParams) {
     return this.vciExtendService.getChartMarket(params);
+  }
+  /*
+   * @param {string} options.symbol - The stock symbol.
+   * @param {string} [options.period=quarter] - The period of the report. Supports "year" or "quarter".
+   */
+  async getBalanceSheetBySymbol(
+    symbol: string,
+    period: 'year' | 'quarter' = 'quarter',
+  ) {
+    return this.vciStock.financials.balanceSheet({ symbol, period });
   }
 }
