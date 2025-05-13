@@ -7,9 +7,12 @@ import {
   Delete,
   Post,
   Body,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { StockService } from '../services/stock.service';
 import { ChartMarketParams } from '../stock.types';
+import { ApiResponse } from '../../common/dto/api-response.dto';
 
 @Controller('stock')
 export class StockController {
@@ -75,6 +78,38 @@ export class StockController {
       fromDate: params.fromDate,
       toDate: params.toDate,
     });
+  }
+
+  @Get('financial')
+  async GetFinancial(
+    @Query('symbol') symbol: string,
+    @Query('period') period: 'year' | 'quarter' = 'quarter',
+  ) {
+    try {
+      if (!symbol) {
+        throw new HttpException(
+          'Symbol parameter is required',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const data = await this.stockService.getBalanceSheetBySymbol(
+        symbol,
+        period,
+      );
+      return ApiResponse.success(
+        data,
+        `Financial data for ${symbol} retrieved successfully`,
+      );
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Failed to retrieve financial data: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Delete('cache/:type')
