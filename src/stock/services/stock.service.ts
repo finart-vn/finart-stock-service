@@ -318,4 +318,15 @@ export class StockService {
   ) {
     return this.vciStock.financials.balanceSheet({ symbol, period });
   }
+
+  async getIncomeStatementBySymbol(
+    symbol: string,
+    period: 'year' | 'quarter' = 'quarter',
+  ) {
+    return this.vciStock.financials.incomeStatement({ symbol, period });
+  }
+
+  async getCashFlow(symbol: string, period: 'year' | 'quarter' = 'quarter') {
+    return this.vciStock.financials.cashFlow({ symbol, period });
+  }
 }

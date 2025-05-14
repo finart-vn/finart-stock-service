@@ -97,8 +97,17 @@ export class StockController {
         symbol,
         period,
       );
+
+      const icom = await this.stockService.getIncomeStatementBySymbol(
+        symbol,
+        period,
+      );
       return ApiResponse.success(
-        data,
+        {
+          balanceSheet: data.data,
+          icom,
+          mapping: data.mapping,
+        },
         `Financial data for ${symbol} retrieved successfully`,
       );
     } catch (error) {
