@@ -93,20 +93,44 @@ export class StockController {
         );
       }
 
-      const data = await this.stockService.getBalanceSheetBySymbol(
+      const balanceSheet = await this.stockService.getBalanceSheetBySymbol(
         symbol,
         period,
       );
 
-      const icom = await this.stockService.getIncomeStatementBySymbol(
-        symbol,
-        period,
+      // const icom = await this.stockService.getIncomeStatementBySymbol(
+      //   symbol,
+      //   period,
+      // );
+      return ApiResponse.success(
+        balanceSheet.data.ratio[0] ?? [],
+        `Financial data for ${symbol} retrieved successfully`,
       );
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        `Failed to retrieve financial data: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @Get('/:symbol')
+  async GetStockDetail(@Param('symbol') symbol: string) {
+    try {
+      if (!symbol) {
+        throw new HttpException(
+          'Symbol parameter is required',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const income = await this.stockService.getIncomeStatementBySymbol(symbol);
       return ApiResponse.success(
         {
-          balanceSheet: data.data,
-          icom,
-          mapping: data.mapping,
+          income: income.data.ratio[0] ?? [],
         },
         `Financial data for ${symbol} retrieved successfully`,
       );
