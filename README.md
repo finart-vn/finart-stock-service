@@ -1,142 +1,323 @@
-# FiNart - Financial Art
+# FiNart - Financial Art 📈
 
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<p align="center">A Vietnamese Stock Trading Advisory System built with NestJS</p>
 
-  <p align="center">A Vietnamese Stock Trading Advisory System built with NestJS.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+<p align="center">
+  <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+  <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+  <a href="https://www.npmjs.com/~nestjscore"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
 </p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+## 🚀 Overview
 
-FiNart is a Vietnamese stock trading advisory system built with NestJS. It provides real-time data and trading insights for the Vietnamese stock market.
+FiNart is a comprehensive Vietnamese stock trading advisory system that provides real-time market data, analysis, and trading insights for the Vietnamese stock market (VN-Index). Built with modern technologies including NestJS, PostgreSQL, Redis, and Prisma.
 
-## Redis Cache Integration
+## ✨ Features
 
-This project uses Redis for caching stock data to improve performance and reduce API calls. Here's how it's set up:
+- 📊 Real-time Vietnamese stock market data
+- 💾 Redis caching for improved performance
+- 🔐 User authentication and authorization
+- 📋 Personal stock watchlists (boards)
+- 🏗️ RESTful API with Swagger documentation
+- 🐳 Docker containerization
+- 🗄️ PostgreSQL database with Prisma ORM
+- ⚡ High-performance caching layer
 
-### Configuration
+## 🛠️ Technology Stack
 
-Redis is configured in `src/config/redis.config.ts` and used as the global cache provider in `app.module.ts`. The cache is used for:
+- **Backend Framework**: NestJS
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Cache**: Redis
+- **Authentication**: JWT
+- **Documentation**: Swagger/OpenAPI
+- **Containerization**: Docker & Docker Compose
+- **Language**: TypeScript
+- **Package Manager**: npm
 
-- Stock history data (TTL: 1 hour)
-- Stock symbols (TTL: 24 hours)
-- Price board data (TTL: 5 minutes)
+## 📋 Prerequisites
 
-### Environment Variables
+Before running this application, make sure you have the following installed:
 
-Set the following environment variables to configure Redis:
+- Node.js (v18 or higher)
+- npm
+- PostgreSQL
+- Redis (optional - can use Docker)
+- Docker & Docker Compose (for containerized deployment)
+
+## 🏗️ Project Structure
+
+```
+finart-stock-api/
+├── src/
+│   ├── common/          # Shared utilities and decorators
+│   ├── config/          # Configuration files
+│   ├── market/          # Market data modules
+│   ├── stock/           # Stock-related endpoints
+│   ├── users/           # User management
+│   ├── prisma/          # Database service
+│   └── main.ts          # Application entry point
+├── prisma/
+│   ├── schema.prisma    # Database schema
+│   ├── seed.ts          # Database seeding
+│   └── migrations/      # Database migrations
+├── test/                # E2E tests
+├── docker-compose.yml   # Docker services configuration
+├── Dockerfile          # Application container
+└── README.md
+```
+
+## ⚙️ Installation & Setup
+
+### 1. Clone the repository
 
 ```bash
-REDIS_HOST=localhost  # Redis server host
-REDIS_PORT=6379       # Redis server port
+git clone <repository-url>
+cd finart-stock-api
 ```
 
-### Running with Docker
-
-Use Docker Compose to run the application with Redis:
+### 2. Install dependencies
 
 ```bash
-docker-compose up
+npm install
 ```
 
-### Cache Management API
+### 3. Environment Configuration
 
-Cache can be manually cleared using the following API endpoint:
-
-```
-DELETE /api/stock/cache/:type?symbols=sym1,sym2
-
-# Where :type is one of: history, symbols, prices, all
-# Optional symbols parameter for specific stock symbols
-```
-
-## Project setup
-
-```bash
-$ npm install
-```
-
-## Environment Variables
-
-FiNart uses environment variables for configuration. A sample file `.env.sample` is provided as a template:
-
-1. Copy the sample file to create your local environment file:
+Copy the sample environment file and configure it:
 
 ```bash
 cp .env.sample .env
 ```
 
-2. Edit the `.env` file and replace placeholder values with your actual configuration:
+Edit `.env` with your configuration:
 
-```
+```bash
 # Database Configuration
-DATABASE_URL=postgresql://username:password@host:port/database
+DATABASE_URL="postgresql://username:password@localhost:5432/finart_db"
 
 # Authentication
-JWT_SECRET=your_jwt_secret_key_here
+JWT_SECRET="your_super_secure_jwt_secret_here"
 
 # Redis Configuration
 REDIS_HOST=localhost
 REDIS_PORT=6379
+
+# Application
+PORT=3001
+NODE_ENV=development
 ```
 
-**Note:** The `.env` file contains sensitive information and should never be committed to version control.
+### 4. Database Setup
 
-## Compile and run the project
+Generate Prisma client and run migrations:
 
 ```bash
-# development
-$ npm run start
+# Generate Prisma client
+npm run prisma:generate
 
-# watch mode
-$ npm run start:dev
+# Run database migrations
+npm run prisma:migrate:dev
 
-# production mode
-$ npm run start:prod
+# Seed the database (optional)
+npm run prisma:seed
 ```
 
-## Run tests
+### 5. Start the application
 
 ```bash
-# unit tests
-$ npm run test
+# Development mode with hot reload
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
+# Production mode
+npm run start:prod
 
-# test coverage
-$ npm run test:cov
+# Debug mode
+npm run start:debug
 ```
 
-## Deployment
+The application will be available at `http://localhost:3001`
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## 🐳 Docker Deployment
 
-## Resources
+### Quick Start with Docker Compose
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+# Start all services (app + PostgreSQL + Redis)
+npm run docker:dev
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
+# Start in detached mode
+npm run docker:start
 
-## License
+# View logs
+npm run docker:logs
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+# Stop all services
+npm run docker:stop
+```
+
+### Manual Docker Build
+
+```bash
+# Build the Docker image
+npm run docker:build
+
+# Run with custom environment
+docker run -p 3001:3001 \
+  -e DATABASE_URL="postgresql://user:password@host:5432/db" \
+  -e REDIS_HOST="redis-host" \
+  finart-server
+```
+
+## 🚀 API Documentation
+
+Once the application is running, you can access:
+
+- **API Documentation**: `http://localhost:3001/api`
+- **Health Check**: `http://localhost:3001/`
+
+### Key API Endpoints
+
+- `GET /api/stock` - Get stock data
+- `GET /api/market` - Market information
+- `POST /auth/login` - User authentication
+- `GET /users/boards` - User watchlists
+- `DELETE /api/stock/cache/:type` - Cache management
+
+## 💾 Redis Cache Integration
+
+The application uses Redis for caching to improve performance:
+
+### Cache Configuration
+
+- **Stock history data**: TTL 1 hour
+- **Stock symbols**: TTL 24 hours  
+- **Price board data**: TTL 5 minutes
+
+### Cache Management
+
+```bash
+# Clear specific cache type
+DELETE /api/stock/cache/history
+DELETE /api/stock/cache/symbols  
+DELETE /api/stock/cache/prices
+
+# Clear all caches
+DELETE /api/stock/cache/all
+
+# Clear specific symbols
+DELETE /api/stock/cache/history?symbols=VIC,VCB,FPT
+```
+
+## 🗄️ Database Schema
+
+The application uses PostgreSQL with the following main entities:
+
+- **Users**: User accounts and authentication
+- **Boards**: Personal stock watchlists/portfolios
+
+```prisma
+model User {
+  id           String @id @default(uuid())
+  email        String @unique
+  name         String
+  passwordHash String
+  passwordSalt String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Board        Board[]
+}
+
+model Board {
+  id        String   @id @default(uuid())
+  name      String
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+## 🧪 Testing
+
+```bash
+# Run unit tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run e2e tests
+npm run test:e2e
+
+# Generate test coverage
+npm run test:cov
+
+# Debug tests
+npm run test:debug
+```
+
+## 📊 Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run start` | Start the application |
+| `npm run start:dev` | Start in development mode with hot reload |
+| `npm run start:prod` | Start in production mode |
+| `npm run build` | Build the application |
+| `npm run test` | Run unit tests |
+| `npm run test:e2e` | Run end-to-end tests |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format code with Prettier |
+| `npm run prisma:studio` | Open Prisma Studio |
+| `npm run prisma:generate` | Generate Prisma client |
+| `npm run prisma:migrate:dev` | Run database migrations |
+| `npm run docker:build` | Build Docker image |
+| `npm run docker:start` | Start with Docker Compose |
+
+## 🚀 Deployment
+
+### Production Deployment
+
+1. **Environment Variables**: Set production environment variables
+2. **Database**: Ensure PostgreSQL is available
+3. **Redis**: Configure Redis for caching
+4. **Build**: Run `npm run build`
+5. **Start**: Run `npm run start:prod`
+
+### Railway Deployment
+
+The project includes Railway-specific scripts:
+
+```bash
+npm run railway:build
+npm run railway:start
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under UNLICENSED - see the package.json file for details.
+
+## 🆘 Support
+
+For questions and support:
+
+- Create an issue in the repository
+- Check the [NestJS Documentation](https://docs.nestjs.com)
+- Visit the [NestJS Discord](https://discord.gg/G7Qnnhy)
+
+---
+
+<p align="center">Built with ❤️ using NestJS</p>
